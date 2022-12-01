@@ -6,17 +6,17 @@ A simple test repo that demonstrates merge queue.
 
 The script below creates 3 pull requests:
 
-* **PR A**: adds new validation to the arguments passed to `calculate()`
-* **PR B**: adds logic that calls `calculate`
-* **PR C**: makes a simple markdown file change
+* **`A`**: enhances the validation of the values passed to  `calculate()`
+* **`B`**: adds new logic that calls `calculate` (passing values that are currently OK, but are not OK with **`A`**'s new validation)
+* **`C`**: makes an unrelated change to a markdown file
 
 <img width="723" alt="image" src="https://user-images.githubusercontent.com/2503052/205069631-235be39d-63d4-4ddc-bcfa-a700a24b5139.png">
 
-All 3 PRs build successfully on their own, but the changes in **PR B** would cause a test failire if applied on top of the changes from **PR A**.
+All 3 PRs build successfully on their own, but the changes in **`B`** will throw an exception and break the build if applied on top of the changes from **`A`**.
 
-_Without merge queue_ (and without requring PR branches be up-to-date before merging), merging **PR A** followed by **PR B** would cause `main` to be in a broken state (not good).
+_**Without merge queue**_ (and without requiring PR branches be up-to-date before merging), merging **`A`** followed by **`B`** would cause `main` to be in a broken state (not good). "_But, my PR [B] was passing when I merged it!_"
 
-_With merge queue_, enqueuing (or merging) **PR A** followed by **PR B** will result in **PR B** getting removed from the queue, giving the developer the opportunity to update their PR to avoid breaking `main`.
+_**With merge queue**_, enqueuing (or merging) **`A`** followed by **`B`** will result in **`B`** getting removed from the queue, giving the developer the chance to make it compatible with the enhanced validation checks now in `main`.
 
 ## Get started
 
@@ -31,7 +31,7 @@ First, configure branch protections on `main` to require merge queue:
 
 ### Seed branches and pull requests
 
-Next, clone the repo locally and run the follow script to create the appropriate branches and PRs:
+Clone the repo locally and run the follow script to create the appropriate branches and PRs:
 
 > **Warning**: as written, the script will force push to `main`.
 
@@ -63,17 +63,18 @@ Now to demonstrate the value of merge queue:
 
 1. Wait for all 3 PRs to pass the required status check (1-2 minutes)   
 
-2. From the web, navigate to **PR A** and add to the queue. Repeat for **PR B** and **PR C** so that all 3 PRs are in the queue.
+2. From the web, navigate to **`A`** and add it to the queue. Repeat for **`B`** and **`C`** so that all 3 PRs are in the queue.
    <img width="913" alt="image" src="https://user-images.githubusercontent.com/2503052/205069843-bfa4b0ae-f0bf-4a7d-97ad-dea20bcccbce.png">
+   * The order in which the PRs are added is important
+   * A few seconds between each enqueue is fine
 
 What **should** happen:
 
-* **PR A** (`main` + `pr-a`) builds successfully and is merged
-* **PR B** (`main` + `pr-a` + `pr-b`) fails because A introduced a change that causes its changes to now throw an exception and fail
-* **PR B** is removed from the queue once it reaches the top (i.e. **PR A**)
-* **PR C** (`main` + `pr-a` + `pr-b` + `pr-c`) fails for the same problem (even though C's changes are unrelated to A or B)
-* **PR C** remains in the queue, a new build starts for it (`main` (which now include `pr-a`) + `pr-c`), and is merged
-
+* **`A`** (`main` + `pr-a`) builds successfully and is merged
+* **`B`** (`main` + `pr-a` + `pr-b`) fails because **`B`** new call to `calculate` fails with the enhanced validation logic added by **`A`**
+* **`B`** is removed from the queue once it reaches the top (i.e. **`A`** merges)
+* **`C`** (`main` + `pr-a` + `pr-b` + `pr-c`) fails for the same problem (even though C's changes are unrelated to A or B)
+* **`C`** remains in the queue, a new build starts for it (`main` -- which includes `pr-a` --- + `pr-c`), and is merged
 
 
 
