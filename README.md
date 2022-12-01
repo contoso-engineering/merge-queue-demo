@@ -10,6 +10,8 @@ The script below creates 3 pull requests:
 * **PR B**: adds logic that calls `calculate`
 * **PR C**: makes a simple markdown file change
 
+<img width="723" alt="image" src="https://user-images.githubusercontent.com/2503052/205069631-235be39d-63d4-4ddc-bcfa-a700a24b5139.png">
+
 All 3 PRs build successfully on their own, but the changes in **PR B** would cause a test failire if applied on top of the changes from **PR A**.
 
 _Without merge queue_ (and without requring PR branches be up-to-date before merging), merging **PR A** followed by **PR B** would cause `main` to be in a broken state (not good).
@@ -59,8 +61,7 @@ gh pr create --fill
 
 Now to demonstrate the value of merge queue:
 
-1. Wait for all 3 PRs to pass the required status check (1-2 minutes)
-   <img width="723" alt="image" src="https://user-images.githubusercontent.com/2503052/205069631-235be39d-63d4-4ddc-bcfa-a700a24b5139.png">
+1. Wait for all 3 PRs to pass the required status check (1-2 minutes)   
 
 2. From the web, navigate to **PR A** and add to the queue. Repeat for **PR B** and **PR C** so that all 3 PRs are in the queue.
    <img width="913" alt="image" src="https://user-images.githubusercontent.com/2503052/205069843-bfa4b0ae-f0bf-4a7d-97ad-dea20bcccbce.png">
@@ -72,10 +73,6 @@ What **should** happen:
 * **PR B** is removed from the queue once it reaches the top (i.e. **PR A**)
 * **PR C** (`main` + `pr-a` + `pr-b` + `pr-c`) fails for the same problem (even though C's changes are unrelated to A or B)
 * **PR C** remains in the queue, a new build starts for it (`main` (which now include `pr-a`) + `pr-c`), and is merged
-
-
-
-
 
 
 
