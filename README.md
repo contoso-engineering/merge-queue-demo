@@ -20,11 +20,11 @@ _**With merge queue**_, enqueuing (or merging) **`A`** followed by **`B`** will 
 
 ## How to demo
 
-Now to demonstrate the value of merge queue:
+1. Reset the main branch to its original state and seed new PRs (see [reset steps](./setup.md))
 
-1. Wait for all 3 PRs to pass the required status check (1-2 minutes)   
+2. Wait for all 3 PRs to pass the required status check (1-2 minutes)   
 
-2. From the web, navigate to **`A`** and add it to the queue. Repeat for **`B`** and **`C`** so that all 3 PRs are in the queue.
+3. From the web, navigate to **`A`** and add it to the queue. Repeat for **`B`** and **`C`** so that all 3 PRs are in the queue.
    <img width="913" alt="image" src="https://user-images.githubusercontent.com/2503052/205069843-bfa4b0ae-f0bf-4a7d-97ad-dea20bcccbce.png">
    * **The order in which the PRs are added is important**
    * A few seconds between each enqueue is fine
