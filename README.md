@@ -18,6 +18,25 @@ _**Without merge queue**_ (and without requiring PR branches be up-to-date befor
 
 _**With merge queue**_, enqueuing (or merging) **`A`** followed by **`B`** will result in **`B`** getting removed from the queue, giving the developer the chance to make it compatible with the enhanced validation checks now in `main`.
 
+## How to demo
+
+Now to demonstrate the value of merge queue:
+
+1. Wait for all 3 PRs to pass the required status check (1-2 minutes)   
+
+2. From the web, navigate to **`A`** and add it to the queue. Repeat for **`B`** and **`C`** so that all 3 PRs are in the queue.
+   <img width="913" alt="image" src="https://user-images.githubusercontent.com/2503052/205069843-bfa4b0ae-f0bf-4a7d-97ad-dea20bcccbce.png">
+   * **The order in which the PRs are added is important**
+   * A few seconds between each enqueue is fine
+
+What **should** happen:
+
+* **`A`** (`main` + `pr-a`) builds successfully and is merged
+* **`B`** (`main` + `pr-a` + `pr-b`) fails because **`B`** new call to `calculate` fails with the enhanced validation logic added by **`A`**
+* **`B`** is removed from the queue once it reaches the top (i.e. **`A`** merges)
+* **`C`** (`main` + `pr-a` + `pr-b` + `pr-c`) fails for the same problem (even though C's changes are unrelated to A or B)
+* **`C`** remains in the queue, a new build starts for it (`main` -- which includes `pr-a` --- + `pr-c`), and is merged
+
 ## Setup
 
 See [setup instructions](setup.md) for one-time setup steps, how to reset the demo, etc.
