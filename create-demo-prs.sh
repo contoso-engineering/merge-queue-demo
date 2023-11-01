@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-heads = ("pr-a", "pr-b", "pr-c")
-for head in "${heads[@]}"
-do
-  gh api "repos/{owner}/{repo}/pulls?head={owner}:$head&state=open" | jq ".[] | .id"
-done
-
-return 0
-
 
 git fetch origin
 git checkout -B main __demo/main
@@ -29,24 +21,3 @@ git checkout -B pr-c __demo/pr-c
 git push origin pr-c -u --force
 gh pr create --fill
 
-
-gh api  -- '
-query {
-    repository {
-
-    }
-}
-'
-
-heads = ("pr-a", "pr-b", "pr-c")
-for head in "${heads[@]}"
-do
-  gh api "repos/{owner}/{repo}/pulls?head={owner}:$head&state=open" | jq ".[] | .id"
-done
-
-gh api "repos/{owner}/{repo}/pulls?head={owner}:pr-a&state=open" | jq ".[] | .id"
-
-
-
-gh api "repos/{owner}/{repo}/pulls?head={owner}:pr-b&state=open"
-gh api "repos/{owner}/{repo}/pulls?head={owner}:pr-c&state=open"
