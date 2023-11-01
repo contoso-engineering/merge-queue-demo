@@ -1,4 +1,4 @@
-# merge-queue-testing
+# Merge Queue Demo
 
 A simple test repo that demonstrates merge queue. 
 
@@ -37,22 +37,22 @@ Clone the repo locally and run the follow script to create the appropriate branc
 
 ```bash
 git fetch origin
-git checkout -B main 8a1bb282523f145aafabf4f7f58a87861d42c2c4
+git checkout -B main __demo/main
 git commit --allow-empty -m "Empty commit to ensure new refs and checks are always run"
 git push origin main --force -u
 
 # PR A (adds checks to "calculate" function that changes its behavior)
-git checkout -B pr-a 78c13f265f40741d3a6d202f8cf8ee11e94a19f9
+git checkout -B pr-a __demo/pr-a
 git push origin pr-a --force -u
 gh pr create --fill
 
 # PR B (calls the "calculate" function in a way that previously worked, but will fail with PR A's updates)
-git checkout -B pr-b e814228ef33cb871d79b3574996ad6e7c6ce9928
+git checkout -B pr-b __demo/pr-b
 git push origin pr-b --force -u
 gh pr create --fill
 
 # PR C (simple markdown change that should not be impacted by PR A or B)
-git checkout -B pr-c 8fe8deb2d1ef4ff42e1809cb130ebb197a778761
+git checkout -B pr-c __demo/pr-c
 git push origin pr-c -u --force
 gh pr create --fill
 ```
@@ -76,9 +76,6 @@ What **should** happen:
 * **`C`** (`main` + `pr-a` + `pr-b` + `pr-c`) fails for the same problem (even though C's changes are unrelated to A or B)
 * **`C`** remains in the queue, a new build starts for it (`main` -- which includes `pr-a` --- + `pr-c`), and is merged
 
-
-
-
 <!-- #### With `push` trigger
 
 ```bash
@@ -96,6 +93,7 @@ gh pr create --fill
 git checkout -B pr-b d9a626020688211e06f170a798c33eb438875bb9
 git push origin pr-b --force -u
 gh pr create --fill
+
 
 # PR C (simple markdown change that should not be impacted by PR A or B)
 git checkout -B pr-c 67a1ece794cba0d488504651a6e4303e79f5f74b
