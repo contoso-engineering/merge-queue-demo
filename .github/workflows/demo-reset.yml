@@ -1,0 +1,30 @@
+name: demo-reset
+
+on: 
+  workflow_dispatch:
+
+jobs:
+  build-version:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+      with:
+        ref: 'demo-setup'
+        fetch-depth: '0'
+
+    - name: git
+      run: |
+        git --version
+        git config user.name "GitHub Demo Set"
+        git config user.email "<>"
+        git status
+
+    - name: Run reset script
+      run: |
+         chmod +x ./demo-reset.sh
+         ./demo-reset.sh
+      shell: bash
+      
