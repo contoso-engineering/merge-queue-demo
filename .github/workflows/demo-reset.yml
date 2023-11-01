@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-version:
+  demo-reset:
 
     runs-on: ubuntu-latest
 
@@ -12,7 +12,7 @@ jobs:
     - name: Git checkout
       uses: actions/checkout@v2
       with:
-        ref: 'demo-setup'
+        ref: '__demo/setup'
         fetch-depth: '0'
 
     - name: git
