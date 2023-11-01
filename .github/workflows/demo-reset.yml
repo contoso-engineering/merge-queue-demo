@@ -3,9 +3,6 @@ name: demo-reset
 on: 
   workflow_dispatch:
 
-env:
-  GH_TOKEN: ${{ github.token }}
-
 jobs:
   build-version:
 
@@ -30,4 +27,6 @@ jobs:
          chmod +x ./demo-reset.sh
          ./demo-reset.sh
       shell: bash
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
